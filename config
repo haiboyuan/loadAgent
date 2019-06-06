@@ -1,0 +1,43 @@
+#需要测试的服务器以及其占总测试带宽的比例
+#Vip_List_Bandwidth_Ratio=(223.202.201.171:40 223.202.201.194:60)  #20% bandwidth for 223.202.201.173, 80% for 223.202.201.194
+Vip_List_Bandwidth_Ratio=(59.36.204.4:100)  #100% for JCT-FS-1-D81
+#Vip_List_Bandwidth_Ratio=(127.0.0.1:100)  #100% for 127.0.0.1
+
+#运行时长，客户端按此时间持续输出指定带宽
+Run_Time=900    #seconds
+
+#[带宽测试]
+#最大并发量， 模拟下载等大文件类请求建议1000，模拟页面等小文件类设置5000-10000，最大值10000
+CONCURRENT_NUM_BAND=10000    
+
+#[带宽测试]
+#单个测试客户端的输出带宽，缺省500Mbps，配置超过8000Mbps会自动控制到8000Mbps
+Output_Bandwidth=40   #Mbps, 1024相当于1Gbps
+
+#[带宽测试]
+#测试URL资源，如果模拟下载系统文件最好大于5M或者大多数大于5M,最大最好控制在1G以内
+#如果模拟页面系统等小文件为主的URL，由于URL条数一般较多，可以把URL列表放入外部文件test_url_list.txt
+#Test_Url_List=(http://jiandan.com/hbyuan/M5 ) #仅一条测试URL
+#Test_Url_List=(http://jiandan.com/hbyuan/M5 \
+#                http://jiandan.com/hbyuan/M6 \
+#                http://jiandan.com/hbyuan/M7 \
+#                http://jiandan.com/hbyuan/M8 \
+#                http://jiandan.com/hbyuan/M9 \
+#                http://jiandan.com/hbyuan/M10 \
+#                http://jiandan.com/hbyuan/M20 \
+#                http://jiandan.com/hbyuan/M30 \
+#                http://jiandan.com/hbyuan/M40 \
+#                http://jiandan.com/hbyuan/M50  
+#)
+Test_Url_List=($(cat test_url_list.txt))
+
+
+#[磁盘IO测试]
+#源站按照Test_Url_Key配置资源且根据此路径配置正则匹配，如 rewrite ^/(.*)/(.*)_(.*)_([0-9]*)$ /$1/$2 last; 
+#实际访问路径类似jiandan.com/hbyuan/M100_BGP-SM-3-3g8_77, BGP-SM-3-3g8为客户端hostname，77为访问资源序列
+#可以保证每台客户端按照序列访问不同资源,多客户端同时运行不会访问相同资源（防止置热走内存）,建议配置文件大于500M
+Test_Url_Key=www.load.com/hbyuan/M500
+
+#[磁盘IO测试]
+#访问资源总数
+Test_Url_Number=1000    #总共访问1000条不同URL

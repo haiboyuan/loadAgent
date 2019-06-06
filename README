@@ -1,0 +1,14 @@
+1.解压loadAgent.tar到任何一个目录
+2.分为带宽测试以及磁盘IO测试，不同测试有自己特有配置,具体带宽控制以及运行时间等参考config配置文件
+3.带宽测试URL list可以在config里直接配置，也可以配置到文件test_url_list.txt里，具体参考config文件
+4.做磁盘IO测试时源站资源需要通过rewrite配置正则匹配，附件test_source_load.conf为nginx源站正则匹配一个范例
+5.通过start.sh程序启动
+    ./start.sh stop 可以停止运行中的压力脚本
+    ./start.sh 或./start.sh start -t band 或 ./start.sh -t band 启动带宽测试
+    ./start.sh -t disk 或 ./start.sh start -t disk  启动磁盘IO测试 
+6.目前在CentOS5.8/6.5/7.3系统验证能正常运行
+7.工具基于curl发送请求，机器上需要有curl程序
+8.运行结果日志请检查nohup.out
+9.磁盘IO测试如果配置本机（127.0.0.1）加压测试会同时通过sar收集磁盘IO性能数据，具体参考脚本运行目录下diskIO.txt,
+  目前是每分钟收集一次，如果访问非本机，需要到测试机器通过sar -d -p -f /var/log/sa/sa26(26为当前日期的日)命令检
+  查磁盘IO性能数据，注意机器缺省记录数据为10分钟一次，可以启动测试前修改/etc/cron.d/sysstat中/usr/lib64/sa/sa1运行频率来调整
